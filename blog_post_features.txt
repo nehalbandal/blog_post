@@ -1,0 +1,16 @@
+Blog Post Application
+	
+To Be added:
+	- Unit Testing
+	- Recommendation system
+
+from blog_post import db, create_app
+app = create_app()
+app.app_context().push()
+from blog_post.models import *
+
+	User.followed --> people whom we follow
+	
+Issues:
+	- There is bug in pagination after search. Need to click on shown paginated button.
+
