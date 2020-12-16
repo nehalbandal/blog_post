@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ user.username }}</h2>
+            <p class="text-secondary">{{ user.email }}</p>
+        </div>
+        {% if user == current_user %}
+        <a class="nav-item nav-link" href="{{ url_for('users.account') }}">Edit Profile</a>
+        {% elif not current_user.is_following(user) %}
+        <p>
+        <form action="{{ url_for('users.follow', username=user.username) }}" method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Follow') }}
+        </form>
+        </p>
+        {% else %}
+        <p>
+        <form action="{{ url_for('users.unfollow', username=user.username) }}" method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Unfollow') }}
+        </form>
+        </p>
+        {% endif %}
+    </div>
+</div>
+<article class="media content-section">
+    <div class="card-deck" style="width:100%;">
+        <div class="card bg-success">
+            <div class="card-body text-center">
+                <h4 class="card-text" style="color:white">Posts: {{ n_posts }}</h4>
+                <a href="{{url_for('users.user_posts', username=user.username)}}" class="btn btn-light btn-sm stretched-link">See Posts</a>
+            </div>
+        </div>
+        <div class="card bg-primary">
+            <div class="card-body text-center">
+                <h4 class="card-text" style="color:white">Following: {{ n_following }}</h4>
+            </div>
+        </div>
+        <div class="card bg-info">
+            <div class="card-body text-center">
+                <h4 class="card-text" style="color:white">Followers: {{ n_followers }}</h4>
+            </div>
+        </div>
+        <!--<div class="card bg-info">-->
+            <!--<div class="card-body text-center">-->
+                <!--<h4 class="card-text">Some text inside the sixth card</h4>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</article>
+{% endblock content %}

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+{% for post in posts.items %}
+<article class="media content-section" style="height:150px;overflow:hidden;">
+    <img class="rounded-circle article-img"
+         src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('users.profile', username=post.author.username) }}">{{ post.author.username
+                }}</a>
+            <small class="text-muted">Likes ({{ (post.likes)|length }})</small>
+            <small class="text-muted" style="float:right">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+        </div>
+        <h2><a class="article-title" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+        <p class="article-content">{{ post.content }}</p>
+    </div>
+</article>
+{% endfor %}
+    {% if current_user.is_authenticated %}
+        {% if q %}
+            {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if posts.page == page_num %}
+                        <a class="btn btn-info mb-4" href="{{ url_for('main.'+route_name, page=page_num, q=q) }}">{{ page_num }} -1</a>
+                    {% else %}
+                        <a class="btn btn-outline-info mb-4" href="{{ url_for('main.'+route_name, page=page_num, q=q) }}">{{ page_num }} -2</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    {% if posts.page == page_num %}
+                        <a class="btn btn-info mb-4" href="{{ url_for('main.'+route_name, page=page_num) }}">{{ page_num }}</a>
+                    {% else %}
+                        <a class="btn btn-outline-info mb-4" href="{{ url_for('main.'+route_name, page=page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <h4 align="center"> Please Login to see more posts.</h4>
+    {% endif %}
+{% endblock content %}
